@@ -76,6 +76,8 @@ class PetaKerawananController extends Controller
             'Pergaulan di luar sekolah', 'Pengguna narkoba','Merokok','Membiayai sekolah sendiri / bekerja',
         ];
         $petaKerawanan = PetaKerawanan::findOrFail($id);
+
+        
         return view('dashboard.page.kerawanan-edit_walas', compact('walas', 'siswa', 'jenisKerawanan', 'petaKerawanan'));
     }
 
@@ -87,7 +89,7 @@ public function kerawanan_update(Request $request, $id)
     $petaKerawanan->jenis_kerawanan = $jenisKerawanan; 
     $petaKerawanan->save();
     LogActivity::create([
-        'Activity' => auth()->user()->name. ' telah mengubah data kerawanan '
+        'Activity' => auth()->user()->name. 'telah mempebaharui data kerawanan '.$user->nama
     ]);
     return redirect('/walas/kerawanan')->with('success', 'Data peta kerawanan berhasil diperbarui.');
 }

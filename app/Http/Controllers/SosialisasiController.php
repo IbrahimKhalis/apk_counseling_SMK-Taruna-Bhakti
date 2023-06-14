@@ -35,9 +35,10 @@ class SosialisasiController extends Controller
         $Sosialisasi->waktu = $request->input('waktu');
         $Sosialisasi->save();
         LogActivity::create([
-            'Activity' => auth()->user()->name. ' telah menambahkan data Sosialisasi '
+            'Activity' => auth()->user()->name. ' telah menambahkan sosialisasi baru dengan judul '.$Sosialisasi->judul
         ]);
-        return redirect('/guru/sosialisasi')->with('success', 'siswa berhasil diedit');
+
+        return redirect('/guru/sosialisasi')->with('success', 'Data sosialisasi berhasil dibuat');
 
     }
 
@@ -62,21 +63,27 @@ class SosialisasiController extends Controller
     }
 
     $Sosialisasi->save();
+
     LogActivity::create([
-        'Activity' => auth()->user()->name. ' telah mengubah data Sosialisasi '
+        'Activity' => auth()->user()->name. ' telah mempebaharui data sosialisasi dengan judul '.$Sosialisasi->judul
     ]);
 
-    return redirect('/guru/sosialisasi')->with('success', 'Sosialisasi berhasil diubah');
+    return redirect('/guru/sosialisasi')->with('success', 'Data Sosialisasi berhasil diubah');
 }
     public function sosialisasi_delete($id){
         $Sosialisasi = Sosialisasi::find($id);
         // Schema::disableForeignKeyConstraints();
         $Sosialisasi->delete();
+        $Sosialisasi->judul;
         // Schema::enableForeignKeyConstraints();
         LogActivity::create([
             'Activity' => auth()->user()->name. ' telah menghapus data Sosialisasi '
         ]);
-        return redirect('/guru/sosialisasi')->with('success', 'siswa berhasil dibuat');
+
+        LogActivity::create([
+            'Activity' => auth()->user()->name. ' telah menghapus data sosialisasi dengan nama '.$Sosialisasi->judul
+        ]);
+        return redirect('/guru/sosialisasi')->with('success', 'Data sosialisasi berhasil dihapus');
     }
 
     // public function

@@ -28,6 +28,9 @@
     
     <div class="card">
         <div class="card-body">
+            <div class="mb-3">
+                <a href="{{ route('create-input') }}" type="button" class="btn btn-primary">Add New</a>
+            </div>
             <h5 class="card-title">Data Guru</h5>
             <div class="table-responsive">
                 <table id="scroll-vertical-datatable" class="table dt-responsive nowrap">
