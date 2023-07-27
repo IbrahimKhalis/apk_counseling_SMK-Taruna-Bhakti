@@ -163,6 +163,8 @@ Route::middleware([
     Route::put('/walas/kerawanan/edit/{id}', [PetaKerawananController::class, 'kerawanan_update']);
     Route::delete('/walas/kerawanan/delete/{id}', [PetaKerawananController::class, 'kerawanan_delete']);
 
+    Route::get('/walas/layanan', [WaliKelasController::class, 'index_layanan']);
+
 });
 
 Route::get('/profile', function(){

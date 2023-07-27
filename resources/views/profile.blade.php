@@ -58,34 +58,64 @@
             </div>
             <div class="infotab">
                 <div class="imageavatar">
-                    <img class="avatar"
-                        src="https://png.pngtree.com/png-clipart/20220719/original/pngtree-businessman-user-avatar-wearing-suit-with-red-tie-png-image_8385663.png"
+                    @if(Auth::user()->profile_photo_path == null)
+                        <img class="avatar"
+                            src="https://png.pngtree.com/png-clipart/20220719/original/pngtree-businessman-user-avatar-wearing-suit-with-red-tie-png-image_8385663.png"
                         alt="">
+                        @else
+                            <img class="avatar"
+                                src="{{ asset('storage/' .Auth::user()->profile_photo_path) }}"
+                            alt="">
+                    @endif
                 </div>
                 <div class="infolist">
                     <div>
                         <p class="banner">Nama :</p>
-                        <p>Ibrahim Khalis</p>
+                        <p>
+                            @if (Auth::user()->hasRole('user'))
+                             {{Auth::user()->siswa->nama}}
+                            @endif
+                        </p>
                     </div>
                     <div>
                         <p class="banner">Jenis Kelamin :</p>
-                        <p>Laki - Laki</p>
+                        <p>
+                            @if (Auth::user()->hasRole('user'))
+                             {{Auth::user()->siswa->jenis_kelamin}}
+                            @endif
+                        </p>
                     </div>
                     <div>
                         <p class="banner">Nisn :</p>
-                        <p>090998</p>
+                        <p>
+                            @if (Auth::user()->hasRole('user'))
+                             {{Auth::user()->siswa->nisn}}
+                            @endif
+                        </p>
                     </div>
                     <div>
                         <p class="banner">Kelas :</p>
-                        <p>XI PPLG II</p>
+                        <p>
+                            @if (Auth::user()->hasRole('user'))
+                             {{Auth::user()->siswa->kelas->nama}}
+                            @endif
+                        </p>
                     </div>
                     <div>
                         <p class="banner">Email :</p>
-                        <p>XI PPLG II</p>
+                        <p>
+                            @if (Auth::user()->hasRole('user'))
+                             {{Auth::user()->email}}
+                            @endif
+                        </p>
                     </div>
                     <div>
                         <p class="banner">Tanggal Lahir :</p>
-                        <p>XI PPLG II</p>
+                        <p>
+                            @if (Auth::user()->hasRole('user'))
+                             {{Auth::user()->siswa->tanggal_lahir}}
+                            @endif
+                        </p>
                     </div>
                 </div>
     
@@ -171,7 +201,7 @@
                         </div>
                     </div>
                 </div>
-                @endforeach
+                @endforeach            
             </div>
         </div>
         <div class="quote">
