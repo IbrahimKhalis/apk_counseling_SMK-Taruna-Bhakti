@@ -29,7 +29,10 @@ use Illuminate\Support\Facades\Auth;
         Route::post('logout',[AuthController::class,'logout']);
         Route::post('store', [AuthController::class, 'store']);
         Route::get('create', [AuthController::class, 'create']);
-
+        Route::get('index', [AuthController::class, 'konseling']);
+        Route::get('show/{id}', [AuthController::class, 'show_layanan']);
+        Route::get('edit/{id}', [AuthController::class, 'edit_layanan']);
+        Route::put('update/{id}', [AuthController::class, 'update']);
     });
 
 Route::post('auth/login', [AuthController::class, 'Login']);
@@ -39,6 +42,7 @@ Route::post('auth/login', [AuthController::class, 'Login']);
 // Route::get('/siswa/{id}', AuthController::class, 'show');
 
 Route::get('/history/{id}', [AuthController::class, 'history']);
+
 
 
 

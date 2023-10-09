@@ -19,7 +19,8 @@ class   KonselingBK extends Model
         'jam_mulai',
         'tempat',
         'pesan',
-        'hasil_konseling'
+        'hasil_konseling',
+        'jenis_karir'
     ];
 
     public function siswa() {

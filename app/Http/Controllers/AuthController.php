@@ -34,6 +34,36 @@ class AuthController extends Controller
         }
     }
     
+    public function konseling()
+    {
+        $user = auth()->user();
+        $siswa = $user->siswa;
+        $konseling = $siswa->konseling;
+        $KonselingList = [];
+        foreach ($konseling as $item){
+            $id = $item->id;
+            $guru = $item->guru;
+            $layanan = $item->layanan;
+            $tanggal = $item->tanggal_konseling;
+            $jam = $item->jam_mulai;
+            $status = $item->status;
+
+            $KonselingList[] = [
+                'id'=> $id,
+                'guru'=> $guru->nama,
+                'layanan' => $layanan->jenis_layanan,
+                'tanggal' => $tanggal,
+                'jam' => $jam,
+                'status' =>$status,
+            ];
+        }
+        return response()->json([
+            'status' => 200,
+            'layanan' => $KonselingList,
+            'message' => 'Successfully retrieved data',
+        ]);
+        
+    }
 
     public function history($id){
         $user = User::find($id);
@@ -74,13 +104,17 @@ class AuthController extends Controller
     public function create()
     {
         $layananBK = LayananBK::all();
-        $siswaData = Siswa::all();
-    
+        
+        // Assuming you have a way to get the currently logged-in student's user ID
+        $loggedInUserId = Auth::user()->id; // This is just an example, replace it with your actual logic
+        
+        $siswaData = Siswa::where('user_id', '!=', $loggedInUserId)->get();
+        
         // Assuming you want to return all the data as a JSON response
         return response()->json([
             'layananBK' => $layananBK,
             'siswa' => $siswaData,
-        ],200);
+        ], 200);
     }
 
     public function store(Request $request){
@@ -117,6 +151,7 @@ class AuthController extends Controller
             'tempat' => $request->tempat,
             'pesan' => $request->pesan,
             'status' => 'Waiting',
+            'jenis_karir' => $request->jenis_karir,
         ]);
 
         $temanArray = json_decode($request->input('teman'), true);
@@ -151,6 +186,136 @@ class AuthController extends Controller
         
     }
 
+    public function show_layanan($id) {
+        $user = auth()->user();
+        $siswa = $user->siswa;
+        $konseling = $siswa->konseling->find($id);
+    
+        if (!$konseling) {
+            return response()->json([
+                'status' => 404,
+                'message' => 'Data not found',
+            ], 404);
+        }
+    
+        $layananId = $konseling->layanan->id;
+    
+        $guru = $konseling->guru;
+        $layanan = $konseling->layanan;
+        $tanggal = $konseling->tanggal_konseling;
+        $tempat = $konseling->tempat;
+        $jam = $konseling->jam_mulai;
+        $pesan = $konseling->pesan;
+        $status = $konseling->status;
+    
+        $data = [
+            'guru' => $guru->nama,
+            'layanan' => $layanan->jenis_layanan,
+            'tanggal' => $tanggal,
+            'jam' => $jam,
+            'tempat' => $tempat,
+            'status' => $status,
+        ];
+    
+        if ($layananId == 4) {
+            $jumlahSiswaKonseling = SiswaKonseling::whereHas('konseling', function ($query) use ($layananId) {
+                $query->where('id_layanan', $layananId);
+            })->count();
+    
+            return response()->json([
+                'status' => 200,
+                'jumlah_siswa_konseling' => $jumlahSiswaKonseling,
+                'layanan' => $data,
+                'message' => 'Successfully retrieved data',
+            ]);
+        } else {
+            return response()->json([
+                'status' => 200,
+                'layanan' => $data,
+                'message' => 'Successfully retrieved data',
+            ]);
+        }
+    }
+
+    public function edit_layanan($id) {
+        $layananBK = LayananBK::all();
+        $loggedInUserId = Auth::user()->id;
+        
+        // Mengambil data konseling BK yang sedang menunggu berdasarkan ID
+        $waitingKonselingBk = KonselingBK::where('status', 'Waiting')->find($id);
+    
+        if (!$waitingKonselingBk) {
+            return response()->json(['message' => 'Konseling BK with waiting status not found.'], 404);
+        }
+    
+        // Mendapatkan siswa-siswa yang memiliki ID konseling yang sama
+        $siswaKonseling = SiswaKonseling::where('id_konseling', $waitingKonselingBk->id)->get();
+    
+        return response()->json([
+            'message' => 'Konseling data created successfully',
+            'konseling' => $waitingKonselingBk,
+            'siswa_konseling' => $siswaKonseling
+        ], 200);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $loggedInUserId = Auth::user()->id;
+        $request->validate([
+            'id_layanan' => 'required',
+            'tanggal_konseling' => 'required',
+            'jam_mulai' => 'required',
+            'tempat' => 'required',
+            'pesan' => 'required',
+        ]);
+    
+        $konseling = KonselingBK::find($id);
+    
+        if (!$konseling) {
+            return response()->json(['message' => 'Konseling not found'], 404);
+        }
+    
+        $konseling->update([
+            'id_layanan' => $request->id_layanan,
+            'tanggal_konseling' => $request->tanggal_konseling,
+            'jam_mulai' => $request->jam_mulai,
+            'tempat' => $request->tempat,
+            'pesan' => $request->pesan,
+            'jenis_karir' => $request->jenis_karir,
+        ]);
+    
+        $teman = json_decode($request->input('teman'), true);
+        $siswaKonselingData = [];
+    
+        if (!empty($teman) && is_array($teman)) {
+            foreach ($teman as $item) { // Ubah $temanArray menjadi $teman
+                $siswaKonselingData[] = [
+                    'id_siswa' => $item,
+                    'id_konseling' => $konseling->id,
+                ];
+            }
+        }
+    
+        $siswa = auth()->user()->siswa;
+        if ($siswa) {
+            $siswaKonselingData[] = [
+                'id_siswa' => $siswa->id,
+                'id_konseling' => $konseling->id,
+            ];
+        }
+        
+        SiswaKonseling::where('id_konseling', $konseling->id)->delete();
+        SiswaKonseling::insert($siswaKonselingData);
+    
+        return response([
+            'message' => "Data berhasil diupdate",
+            'konseling' => $konseling,
+            'siswa_konseling' => $siswaKonselingData // Ubah 'siswa' menjadi 'siswa_konseling'
+        ], 200);
+    }
+    
+    
+    
     public function logout(){
         auth()->user()->tokens()->delete();
         return response([
