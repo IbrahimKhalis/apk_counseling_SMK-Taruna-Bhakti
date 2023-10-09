@@ -16,7 +16,11 @@ class SiswaKonseling extends Model
         'id_konseling'
     ];
 
+    // public function konseling() {
+    //     return $this->belongsToMany(KonselingBK::class, 'id');
+    // }
     public function konseling() {
-        return $this->belongsToMany(KonselingBK::class, 'id');
+        return $this->belongsTo(KonselingBK::class, 'id_konseling');
     }
+    
 }

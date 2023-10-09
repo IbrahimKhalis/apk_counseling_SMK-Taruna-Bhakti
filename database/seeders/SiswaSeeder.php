@@ -34,7 +34,7 @@ class SiswaSeeder extends Seeder
         $date = Carbon::now();
         $siswa = User::create([
             'name' => 'Icad',
-            'email' => 'irsyadgmail.com',
+            'email' => 'irsyad@gmail.com',
             'password' => bcrypt('password')
         ]);
          Siswa::create([

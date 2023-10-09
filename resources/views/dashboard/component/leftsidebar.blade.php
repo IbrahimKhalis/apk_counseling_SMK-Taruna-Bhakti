@@ -101,6 +101,20 @@
                     </ul>
                 </div>
             </li>
+            <li class="side-nav-item">
+                <a data-bs-toggle="collapse" href="#sidebarTasks" aria-expanded="false" aria-controls="sidebarTasks" class="side-nav-link">
+                    <i class="uil-clipboard-alt"></i>
+                    <span> Konseling Siswa </span>
+                    <span class="menu-arrow"></span>
+                </a>
+                <div class="collapse" id="sidebarTasks">
+                    <ul class="side-nav-second-level">
+                        <li>
+                            <a href="/walas/layanan">Konseling Siswa</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
             @endhasrole
 
             @hasrole('guru bk')
@@ -159,8 +173,8 @@
                 <div class="collapse" id="sidebarquote">
                     <ul class="side-nav-second-level">
                         <li>
-                            <a href="{{ route('quote') }}">Data Quote</a>
-                            <a href="{{ route('quote-create') }}">Form Quote</a>
+                            <a href="/guru/quote">Data Quote</a>
+                            <a href="/guru/quote/create">Form Quote</a>
                         </li>
                     </ul>
                 </div>

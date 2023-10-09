@@ -35,6 +35,9 @@ class LayananController extends Controller
         $konselingBK = KonselingBK::find($dataKonseling);
         $quotes = Quote::all();
         $data = [];
+        $tahun = '';
+        $bulan = '';
+        $hari = '';
 
         foreach ($konselingBK as $konseling) {
             $tanggal = $konseling->tanggal_konseling;
@@ -52,20 +55,7 @@ class LayananController extends Controller
             ];
         }
 
-        return view('profile', compact('layananBK', 'siswa', 'profile','konselingBK','tahun','bulan','hari','quotes'));
-    }
-
-    public function indexGuru() {
-        $layananBK = LayananBK::all();
-        $user = Auth::user();
-        $profile = $user->siswa;
-        $siswa = Siswa::all();
-        // $dataKelas = Kelas::where('guru_id', Auth::user()->id);
-        // dd($dataKelas);
-        // $dataWalas = $dataKelas->walas_id; 
-
-
-        return view('dashboard.page.form-konsul-guru', compact('layananBK','profile','siswa'));
+        return view('profile', compact('layananBK', 'siswa', 'profile', 'konselingBK', 'tahun', 'bulan', 'hari', 'quotes'));
     }
 
     /**

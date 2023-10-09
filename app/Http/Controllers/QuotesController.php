@@ -16,7 +16,6 @@ class QuotesController extends Controller
     public function index()
     {
         $dataQuote = Quote::all();
-
         return view('dashboard.page.quote', compact('dataQuote'));
     }
 

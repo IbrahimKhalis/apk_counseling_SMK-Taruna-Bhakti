@@ -15,7 +15,7 @@
                         <li class="breadcrumb-item active">Siswa</li>
                     </ol>
                 </div>
-                <h4 class="page-title">Data Kerawanan</h4>
+                <h4 class="page-title">Data Qoute</h4>
             </div>
         </div>
     </div>     
